@@ -666,6 +666,9 @@
 
    **PT**%include sascode(notify);
    
+   %** Clean up **;
+   
+   x "rmdir /s/q ""&inpath\unzip""";
+   
 %mend m_2000_cnvtsf1_alt;
-
 
