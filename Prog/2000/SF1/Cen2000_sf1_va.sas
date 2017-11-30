@@ -1,5 +1,5 @@
 /**************************************************************************
- Program:  Cen2000_sf1_dc.sas
+ Program:  Cen2000_sf1_va.sas
  Library:  Census
  Project:  NeighborhoodInfo DC
  Author:   P. Tatian
@@ -8,7 +8,7 @@
  Environment:  Local Windows session (desktop)
  
  Description: Create Census 2000 SF1 block and other summary level data
- for DC.
+ for VA.
 
  Modifications:
 **************************************************************************/
@@ -19,5 +19,5 @@
 %DCData_lib( Census )
 
 
-%Cen2000_sf1( stateab=dc, revisions=%str(Replace with new file process. (No data changes.)) )
+%Cen2000_sf1( stateab=va )
 
