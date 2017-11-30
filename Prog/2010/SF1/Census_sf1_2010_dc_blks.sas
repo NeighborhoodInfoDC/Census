@@ -1,45 +1,78 @@
-/************************************************************************
- Program:  Upload_Census_sf1_2010_dc_blks.sas
+/**************************************************************************
+ Program:  Census_sf1_2010_dc_blks.sas
  Library:  Census
- Project:  DC Data Warehouse
- Author:   S. Litschwartz
- Created:  9/23/11
- Version:  SAS 8.2
- Environment:  Windows with SAS/Connect
+ Project:  NeighborhoodInfo DC
+ Author:   P Tatian
+ Created:  1/15/14
+ Version:  SAS 9.2
+ Environment:  Local Windows session (desktop)
  
- Description: Clean 2010 Census DC SF1 data for upload to alpha
-************************************************************************/
+ Description: Create Census 2010 SF1 P&H data file for blocks.
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
-/*%include "K:\Metro\PTatian\DCData\SAS\Inc\AlphaSignon.sas" /nosource2;*/
+ Modifications:
+**************************************************************************/
+
+%include "L:\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
 %DCData_lib( Census)
 
-data Census.Census_sf1_2010_dc_blks
-(sortedby=GeoBlk2010
-label="Census 2010 SF1 P & H tables, DC, blocks only");
-set Census.xtract;
-format sumlev $sumlev.;
-rename esriid=GeoBlk2010;
- label
+** Locations of input data sets from Missouri Census Data Center **;
+libname Cen10Sf1 "&_dcdata_r_path\Census\Raw\2010\SF1";
+
+** Metadata parameters **;
+%let finalize = Y;
+%let revisions = %str(New file.);
+
+
+** Copy file, add geo IDs, label and format vars **;
+
+data Census_sf1_2010_dc_blks (label="Census 2010 SF1 P & H tables, DC, blocks only");
+
+  set Cen10Sf1.dcblocks;
+  
+  format _all_ ;
+  informat _all_ ;
+  
+  length Geo2010 $ 11 GeoBg2010 $ 12 GeoBlk2010 $ 15;
+  
+  Geo2010 = esriid;
+  GeoBg2010 = esriid;
+  GeoBlk2010 = esriid;
+
+  label
+    GeoBlk2010 = 'Full census block ID (2010): sscccttttttbbbb'
+    GeoBg2010 = 'Full census block group ID (2010): sscccttttttb'
+    Geo2010 = 'Full census tract ID (2010): ssccctttttt';
+
+  format
+    GeoBlk2010 $blk10a.
+    GeoBg2010 $bg10a.
+    Geo2010 $geo10a.;
+
+  Stab = upcase( Stab );
+
+  label
+    county = 'Full county ID: ssccc'
     BG    = 'Census block group ID'    
     Block = 'Census block ID'
     CntySC   = 'County size code'
-	CntyCC =   'FIPS County Class Code'
     ConCit   = 'Consolidated city (FIPS)'
     CouSubCC = 'FIPS county subdivision class code'
     CouSubFP = 'County subdivision (FIPS)'
     CouSubSC = 'County subdivision size code'
-	County=	   'Full county ID: ssccc'
     Division = 'Census division'
     FuncStat = 'Functional status code'
+    HU100    = 'Housing unit count (100%)'
+    IntPtLat = 'Internal point latitude'
+    IntPtLon = 'Internal point longitude'
     LSADC    = 'Legal/statistical area description code'
     LogRecNo = 'Census file logical record number'
     PartFlag = 'Part flag'
     PlaceCC  = 'FIPS place class code'
     PlaceFP  = 'Place (FIPS)'
     PlaceSC  = 'Place size code'
+    Pop100   = 'Population count (100%)'
     Region   = 'Census region'
     SDElm    = 'School district (elementary)'
     SDSec    = 'School district (secondary)'
@@ -61,32 +94,54 @@ rename esriid=GeoBlk2010;
     gcuni    = 'Geographic change user note indicator'
     vtd  = 'Voting district'
     vtdi = 'Voting district indicator'
-	SubMCD = 'Subminor Civil Division (FIPS)'
-	SubMCDCC = 'Subminor Civil Division (FIPS)Class Code'
-	MEMI= 'Metropolitan/Micropolitan Indicator'
-	NMEMI = 'NECTA Metropolitan/Micropolitan Indicator'
-	UA = 'Urban Area'
-	UASC = 'Urban Area Size Code'
-	UAType  = 'Urban Area Type'
-	ttract= 'Tribal Census Tract'
-	tblkgrp = 'Tribal Block Group'
-	MetDiv = 'Metropolitan Division'
-	CSA = 'Combined Statistical Area'
-	NECTA = 'New England City and Town Area'
-	NECTASC = 'New England City and Town Area Size Code'
-	NECTADiv = 'New England City and Town Area Division'
-	CNECTA = 'Combined New England City and Town Area Division'
-	CBSAPCI = 'Metropolitan Statistical Area/Micropolitan Statistical Area Principal City Indicator'
-	CBSA = 'Metropolitan Statistical Area/Micropolitan Statistical Area'
-	CBSASC = 'Metropolitan Statistical Area/Micropolitan Statistical Area Size Code'
-	esriid = 'Full census block ID (2010): sscccttttttbbbb'
   ;
-  drop areaname;
+
+  drop AreaName GeoCode esriid;
+  
+  rename county=ucounty;
+
+run;
+
+proc sort data=Census_sf1_2010_dc_blks;
+  by GeoBlk2010;
 run;
 
 
+/** Macro Finalize - Start Definition **/
+
+%macro Finalize(  );
+
+  %local out_ds;
+  %let out_ds = Census_sf1_2010_dc_blks;
+
+  %if %upcase( &finalize ) = Y %then %do;
+
+    proc copy in=work out=Census_r;
+      select &out_ds. / memtype=data;
+    run;
+
+    %File_info( data=Census_r.&out_ds., printobs=5, printchar=y, freqvars=_character_ )
+
+    %Dc_update_meta_file(
+      ds_lib=Census,
+      ds_name=&out_ds.,
+      creator_process=&out_ds..sas,
+      restrictions=None,
+      revisions=%str(&revisions)
+    )
+
+  %end;
+
+  %else %do;
+
+    %File_info( data=&out_ds., printobs=5, printchar=y, freqvars=_character_ )
+
+  %end;
+
+%mend Finalize;
+
+/** End Macro Definition **/
 
 
-
-
+%Finalize()
 

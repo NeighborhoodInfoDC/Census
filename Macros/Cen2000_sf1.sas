@@ -197,6 +197,7 @@
       areaname = 'Area name'
       gcuni    = 'Geographic change user note indicator'
       geo_id = 'Census geo ID'
+      geocode = 'Geographic code'
       vtd  = 'Voting district'
       vtdi = 'Voting district indicator'
     ;
