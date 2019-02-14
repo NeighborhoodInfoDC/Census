@@ -25,7 +25,7 @@
 
 filename fimport "&filepath.&infile." lrecl=32767;
 
-data Cen_building_permits_dc_md_va_wv (where=(county in ("11001","24017","24021","24031", "24033", "51013", "51059", "51107", "51153", "51510", "51600", "51610", "51683","51685")));
+data Cen_building_permits_dc_md_va_wv ;
 
 	infile FIMPORT delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
 
@@ -34,7 +34,7 @@ data Cen_building_permits_dc_md_va_wv (where=(county in ("11001","24017","24021"
 	informat county_code best32.;
 	informat region best32.;
 	informat division best32. ;
-	informat buildings	$20.;
+	informat buildings	$40.;
 	informat units1_building best32.;
 	informat units1 best32.;
 	informat units1_value best32.;
@@ -57,48 +57,46 @@ data Cen_building_permits_dc_md_va_wv (where=(county in ("11001","24017","24021"
 	informat units34rep best32.;
 	informat units34rep_value best32.;
 	informat units5prep_building best32.;
-	informat units5prep best32.;
-	informat units5prep_value best32.;
 	informat county_fips best32.;
 
-	input
-	year  
+	input 	
+	year
 	state_fips 
 	county_code 
-	region
+	region 
 	division 
 	buildings $
-	units1_building
-	units1
-	units1_value
-	units2_building
-	units2
-	units2_value
-	units34_building
-	units34
-    units34_value
-    units5p_building
-    units5p
-    units5p_value
-	units1rep_building
-	units1rep
-	units1rep_value
-	units2rep_building
-	units2rep
-	units2rep_value
-	units34rep_building
-	units34rep
-    units34rep_value
-    units5prep_building
-    units5prep
-    units5prep_value
-    county_fips
+	units1_building 
+	units1 
+	units1_value 
+	units2_building 
+	units2 
+	units2_value 
+	units34_building 
+	units34 
+	units34_value 
+	units5p_building
+	units5p 
+	units5p_value 
+	units1rep_building 
+	units1rep 
+	units1rep_value 
+	units2rep_building 
+	units2rep 
+	units2rep_value 
+	units34rep_building 
+	units34rep 
+	units34rep_value 
+	units5prep_building 
+	county_fips
 	;
 
-	county = put(county_fips,z5.);
+	ucounty = put(county_fips,z5.);
 	state = put(state_fips,z2.);
 
 	drop county_fips state_fips county_code region division buildings ;
+
+	if ucounty in ("11001","24017","24021","24031", "24033", "51013", "51059", "51107", "51153", "51510", "51600", "51610", "51683","51685");
 
 	label 
 	year  = "Survey Year"
@@ -139,7 +137,7 @@ run;
   out=Cen_building_permits_dc_md_va_wv,
   outlib=Census,
   label="Building permit statistics for DC, MD, VA and WV",
-  sortby=county,
+  sortby=year ucounty,
   restrictions=None,
   revisions=New File.
   );
