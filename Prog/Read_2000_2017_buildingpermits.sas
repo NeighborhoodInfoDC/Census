@@ -23,6 +23,9 @@
 %let filepath = L:\Libraries\Census\Raw\Permits\;
 %let infile = permits2000_2017.csv;
 
+/* Revisions */
+%let revisions = New file;
+
 filename fimport "&filepath.&infile." lrecl=32767;
 
 data Cen_building_permits_dc_md_va_wv ;
@@ -130,7 +133,7 @@ data Cen_building_permits_dc_md_va_wv ;
 
 run;
 
-%File_info( data=Cen_building_permits_dc_md_va_wv, stats=, freqvars=state county  );
+%File_info( data=Cen_building_permits_dc_md_va_wv, stats=, freqvars=state ucounty  );
 
 %Finalize_data_set( 
   data=Cen_building_permits_dc_md_va_wv,
@@ -139,5 +142,7 @@ run;
   label="Building permit statistics for DC, MD, VA and WV",
   sortby=year ucounty,
   restrictions=None,
-  revisions=New File.
+  revisions=&revisions.
   );
+
+  /* End of program */
