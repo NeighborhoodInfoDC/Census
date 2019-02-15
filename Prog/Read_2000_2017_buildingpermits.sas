@@ -99,7 +99,7 @@ data Cen_building_permits_dc_md_va_wv ;
 
 	drop county_fips state_fips county_code region division buildings ;
 
-	if ucounty in ("11001","24017","24021","24031", "24033", "51013", "51059", "51107", "51153", "51510", "51600", "51610", "51683","51685");
+    if put( ucounty, $ctym15f. ) ^= . ;
 
 	label 
 	year  = "Survey Year"
