@@ -126,9 +126,7 @@ data Cen_building_permits_dc_md_va_wv ;
 	units34rep = "Total units of buildings with 3-4 units"
     units34rep_value = "Value of buildings with 3-4 units, reported only"
     units5prep_building = "Buildings with 5+ units, reported only"
-    units5prep = "Total units of building with 5+ units, reported only"
-    units5prep_value = "Values of buildings with 5+ units, reported only"
-	county = "County FIPS"
+	ucounty = "County FIPS"
 	;
 
 run;
