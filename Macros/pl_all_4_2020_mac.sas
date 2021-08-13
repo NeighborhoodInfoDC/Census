@@ -13,7 +13,7 @@
  Modifications:
 **************************************************************************/
 
-/** Macro pl_all_3_2020_mac - Start Definition **/
+/** Macro pl_all_4_2020_mac - Start Definition **/
 
 %macro pl_all_4_2020_mac( state );
 
@@ -31,7 +31,7 @@
   /* */
 
 	data work.header;
-	infile infile "&in_path\&state.geo&dec_yr..pl" dlm="|" lrecl = 500 dsd missover pad;
+	infile "&in_path\&state.geo&dec_yr..pl" dlm="|" lrecl = 500 dsd missover pad;
 	LENGTH
 	FILEID     $6  /* File Identification */
 	STUSAB     $2  /* State/US-Abbreviation (USPS) */
@@ -1325,10 +1325,10 @@
 	  by logrecno;
 	  if not (in1 and in2 and in3 and in4) then
 	  do;  
-	     if not in1 then do; %err_put( macro=pl_all_4_2020_mac, msg='Logrecno is not in HEADER at line ' _n_ ) end;
-         if not in2 then do; %err_put( macro=pl_all_4_2020_mac, msg='Logrecno is not in PART1 at line ' _n_ ) end;
-         if not in3 then do; %err_put( macro=pl_all_4_2020_mac, msg='Logrecno is not in PART2 at line ' _n_ ) end;
-		 if not in4 then do; %err_put( macro=pl_all_4_2020_mac, msg='Logrecno is not in PART3 at line ' _n_ ) end;
+	    if not in1 then put 'Logrecno is not in header at line ' _n_;
+	    if not in2 then put 'Logrecno is not in part1 at line ' _n_;
+	    if not in3 then put 'Logrecno is not in part2 at line ' _n_;
+		if not in4 then put 'Logrecno is not in part3 at line ' _n_;
 	  end;
     
     format sumlev $sum20f.;
@@ -1364,10 +1364,10 @@
   revisions=New File
   )
   
-  %File_info( data=&out, printchar=Y,
-              freqvars=fileid stusab sumlev geocomp chariter region division state county )
 
 %mend pl_all_4_2020_mac;
 
 /** End Macro Definition **/
+
+
 
