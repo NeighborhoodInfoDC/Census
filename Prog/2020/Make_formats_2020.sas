@@ -10,7 +10,7 @@
  Description:  Create Census 2010 formats.
 
  Modifications:
-  03/28/11 PAT Updated $sum10f.
+  03/28/11 PAT Updated $sum20f.
 **************************************************************************/
 
 %include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
@@ -19,7 +19,7 @@
 %DCData_lib( Census )
 
 proc format library=Census;
-  value $sum10f
+  value $sum20f
     040 = "State"
     500 = "State-Congr Dist"
     510 = "State-Congr Dist-County"
@@ -98,7 +98,6 @@ proc format library=Census;
     281 = "State-Am Indian Area-Tribal Subd/Rem"
     282 = "State-Am Indian Area/AK Native Area/HI Home Land-County"
     283 = "State-Am Indian Area/AK Native Area (Res or Statistical Entity Only)"
-    285 = "State-Am Indian Area/AK Native Area (Res or Statistical Entity Only)-County"
     286 = "State-Am Indian Area (Off-Res Trust Land Only)/HI Home Land"
     288 = "State-Am Indian Area (Off-Res Trust Land Only)/HI Home Land-County"
     230 = "State-AK Native Regional Corporation"
