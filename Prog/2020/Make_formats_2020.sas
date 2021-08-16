@@ -13,7 +13,8 @@
   03/28/11 PAT Updated $sum20f.
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
+%include "\\sas1\DCdata\SAS\Inc\StdLocal.sas";
+
 
 ** Define libraries **;
 %DCData_lib( Census )
