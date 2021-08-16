@@ -1,19 +1,19 @@
 /**************************************************************************
- Program:  Make_formats.sas
+ Program:  Make_formats_2020.sas
  Library:  Census
- Project:  NeighborhoodInfo DC
- Author:   P. Tatian
- Created:  03/05/11
- Version:  SAS 9.1
+ Project:  Urban-Greater DC
+ Author:   Elizabeth Burton
+ Created:  08/16/21
+ Version:  SAS 9.4
  Environment:  Windows
  
- Description:  Create Census 2010 formats.
+ Description:  Create Census 2020 formats.
 
  Modifications:
-  03/28/11 PAT Updated $sum20f.
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
+%include "\\sas1\DCdata\SAS\Inc\StdLocal.sas";
+
 
 ** Define libraries **;
 %DCData_lib( Census )
@@ -105,21 +105,6 @@ proc format library=Census;
     960 = "State-School Dist (Secondary)/Rem"
     970 = "State-School Dist (Unified)/Rem"
       
-/*  
-    "643" = "State-Place-State Legislative District (Lower Chamber)"
-    "700" = "State-County-Voting District/Remainder"
-    "701" = "State-County-Voting District/Remainder-Place/Remainder"
-    "702" = "State-County-Voting District/Remainder-Consolidated City"
-    "703" = "State-County-Voting District/Remainder-American Indian Area/Alaska Native Area/Hawaiian Home Land"
-    "704" = "State-County-Voting District/Remainder-American Indian Area-Tribal Subdivision/Remainder"
-    "705" = "State-County-Voting District/Remainder-Alaska Native Regional Corporation"
-    "706" = "State-County-Voting District/Remainder-School District (Elementary)/Remainder"
-    "710" = "State-County-Voting District/Remainder-County Subdivision"
-    "720" = "State-County-Voting District/Remainder-County Subdivision-Place/Remainder"
-    "730" = "State-County-Voting District/Remainder-County Subdivision-Place/Remainder-Census Tract"
-    "740" = "State-County-Voting District/Remainder-County Subdivision-Place/Remainder-Census Tract-Block Group"
-    "750" = "State-County-Voting District/Remainder-County Subdivision-Place/Remainder-Census Tract-Block Group-Block"
-*/    
   ;
 
 run;
