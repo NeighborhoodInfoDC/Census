@@ -3,16 +3,16 @@
  Library:  Census
  Project:  Urban-Greater DC
  Author:   Elizabeth Burton
- Created:  08/16/21
+ Created:  08/25/21
  Version:  SAS 9.4
  Environment:  Windows
  
  Description:  Read in Census 2010-2020 block crosswalk.
  
- District of Columbia
+ Virginia
  
  Source for crosswalk:
- http://www.census.gov/geo/www/2010census/t00t10.html
+ https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html
 
  Modifications:
 **************************************************************************/
@@ -20,13 +20,16 @@
 %include "\\sas1\DCdata\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
-%DCData_lib( Census )
+%DCData_lib( Census );
 
-filename csvfile  "&_dcdata_path\Census\Raw\2020\TAB2010_TAB2020_ST_11_v2.txt" lrecl=2010;
+%let state = VA;
+%let revisions = New File;
 
-data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC");
+filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st51_va.txt" ;
 
-  infile csvfile dsd stopover firstobs=2;
+data Work.Blk_xwalk_2010_2020_va;
+
+  infile csvfile dlm="|" lrecl = 500 dsd missover pad firstobs=2;
   
   length
     GeoBlk2010 $15
@@ -83,7 +86,7 @@ data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC"
   GeoBlk2020 = State_2020 || County_2020 || Tract_2020 || Blk_2020;
 
   GeoBg2010 = GeoBlk2010;
-  GeoBg2010 = GeoBlk2010;
+  GeoBg2020 = GeoBlk2020;
   
   Geo2010 = GeoBlk2010;
   Geo2020 = GeoBlk2020;
@@ -116,15 +119,17 @@ data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC"
   
 run;
 
-%Finalize_data_set( data=Census.Blk_xwalk_2010_2020_dc, printobs=25, 
-            freqvars=Block_Part_Flag_O Block_Part_Flag_R Blksf_2010 Blksf_2020 )
+  %Finalize_data_set( 
+  data=Blk_xwalk_2010_2020_va,
+  out=Blk_xwalk_2010_2020_va,
+  outlib=Census,
+  label="Census 2010-2020 block crosswalk, VA",
+  sortby=GeoBlk2020,
+  restrictions=None,
+  printobs=25,
+  freqvars=Block_Part_Flag_O Block_Part_Flag_R Blksf_2010 Blksf_2020,
+  revisions=New File
+  )
 
-proc print data=Census.Blk_xwalk_2010_2020_dc noobs;
-  var geoblk: arealand: areawater: block_part_flag_:;
-  where geoblk2010 = '110010001004016' or geoblk2020 in ( '110010001004016', '110010001004020', '110010001004021' );
-run;
 
-proc print data=Census.Blk_xwalk_2010_2020_dc noobs;
-  var geoblk: arealand: areawater: block_part_flag_:;
-  where geoblk2010 in ( '110010001002000' ) or geoblk2020 in ( '110010001002005' );
-run;
+  /* End of Program */

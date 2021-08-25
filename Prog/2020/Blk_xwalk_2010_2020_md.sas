@@ -20,11 +20,14 @@
 %include "\\sas1\DCdata\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
-%DCData_lib( Census )
+%DCData_lib( Census );
 
-filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st11_dc.txt" ;
+%let state = MD;
+%let revisions = New File;
 
-data Work.Blk_xwalk_2010_2020_dc;
+filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st24_md.txt" ;
+
+data Work.Blk_xwalk_2010_2020_md;
 
   infile csvfile dlm="|" lrecl = 500 dsd missover pad firstobs=2;
   
@@ -117,10 +120,10 @@ data Work.Blk_xwalk_2010_2020_dc;
 run;
 
   %Finalize_data_set( 
-  data=Blk_xwalk_2010_2020_dc,
-  out=Blk_xwalk_2010_2020_dc,
+  data=Blk_xwalk_2010_2020_md,
+  out=Blk_xwalk_2010_2020_md,
   outlib=Census,
-  label="Census 2010-2020 block crosswalk, DC",
+  label="Census 2010-2020 block crosswalk, MD",
   sortby=GeoBlk2020,
   restrictions=None,
   printobs=25,
@@ -128,4 +131,4 @@ run;
   revisions=New File
   )
 
-/* End of program */
+  /* End of Program */

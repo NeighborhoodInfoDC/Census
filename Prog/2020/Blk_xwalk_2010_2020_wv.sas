@@ -9,7 +9,7 @@
  
  Description:  Read in Census 2010-2020 block crosswalk.
  
- District of Columbia
+ West Virginia
  
  Source for crosswalk:
  https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html
@@ -17,14 +17,18 @@
  Modifications:
 **************************************************************************/
 
+
 %include "\\sas1\DCdata\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
-%DCData_lib( Census )
+%DCData_lib( Census );
 
-filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st11_dc.txt" ;
+%let state = WV;
+%let revisions = New File;
 
-data Work.Blk_xwalk_2010_2020_dc;
+filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st54_wv.txt" ;
+
+data Work.Blk_xwalk_2010_2020_wv;
 
   infile csvfile dlm="|" lrecl = 500 dsd missover pad firstobs=2;
   
@@ -117,10 +121,10 @@ data Work.Blk_xwalk_2010_2020_dc;
 run;
 
   %Finalize_data_set( 
-  data=Blk_xwalk_2010_2020_dc,
-  out=Blk_xwalk_2010_2020_dc,
+  data=Blk_xwalk_2010_2020_wv,
+  out=Blk_xwalk_2010_2020_wv,
   outlib=Census,
-  label="Census 2010-2020 block crosswalk, DC",
+  label="Census 2010-2020 block crosswalk, WV",
   sortby=GeoBlk2020,
   restrictions=None,
   printobs=25,
@@ -128,4 +132,5 @@ run;
   revisions=New File
   )
 
-/* End of program */
+
+  /* End of Program */
