@@ -12,7 +12,7 @@
  District of Columbia
  
  Source for crosswalk:
- http://www.census.gov/geo/www/2010census/t00t10.html
+ https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html
 
  Modifications:
 **************************************************************************/
@@ -22,11 +22,11 @@
 ** Define libraries **;
 %DCData_lib( Census )
 
-filename csvfile  "&_dcdata_path\Census\Raw\2020\TAB2010_TAB2020_ST_11_v2.txt" lrecl=2010;
+filename csvfile  "&_dcdata_path\Census\Raw\2020\tab2010_tab2020_st11_dc.txt" ;
 
-data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC");
+data Work.Blk_xwalk_2010_2020_dc;
 
-  infile csvfile dsd stopover firstobs=2;
+  infile csvfile dlm="|" lrecl = 500 dsd missover pad firstobs=2;
   
   length
     GeoBlk2010 $15
@@ -83,7 +83,7 @@ data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC"
   GeoBlk2020 = State_2020 || County_2020 || Tract_2020 || Blk_2020;
 
   GeoBg2010 = GeoBlk2010;
-  GeoBg2010 = GeoBlk2010;
+  GeoBg2020 = GeoBlk2020;
   
   Geo2010 = GeoBlk2010;
   Geo2020 = GeoBlk2020;
@@ -116,15 +116,16 @@ data Census.Blk_xwalk_2010_2020_dc (label="Census 2010-2020 block crosswalk, DC"
   
 run;
 
-%Finalize_data_set( data=Census.Blk_xwalk_2010_2020_dc, printobs=25, 
-            freqvars=Block_Part_Flag_O Block_Part_Flag_R Blksf_2010 Blksf_2020 )
+  %Finalize_data_set( 
+  data=Blk_xwalk_2010_2020_dc,
+  out=Blk_xwalk_2010_2020_dc,
+  outlib=Census,
+  label="Census 2010-2020 block crosswalk, DC",
+  sortby=GeoBlk2020,
+  restrictions=None,
+  printobs=25,
+  freqvars=Block_Part_Flag_O Block_Part_Flag_R Blksf_2010 Blksf_2020,
+  revisions=New File
+  )
 
-proc print data=Census.Blk_xwalk_2010_2020_dc noobs;
-  var geoblk: arealand: areawater: block_part_flag_:;
-  where geoblk2010 = '110010001004016' or geoblk2020 in ( '110010001004016', '110010001004020', '110010001004021' );
-run;
-
-proc print data=Census.Blk_xwalk_2010_2020_dc noobs;
-  var geoblk: arealand: areawater: block_part_flag_:;
-  where geoblk2010 in ( '110010001002000' ) or geoblk2020 in ( '110010001002005' );
-run;
+/* End of program */
