@@ -1,5 +1,5 @@
 /**************************************************************************
- Program:  Blk_xwalk_2010_2020_dc.sas
+ Program:  Blk_xwalk_2010_2020_md.sas
  Library:  Census
  Project:  Urban-Greater DC
  Author:   Elizabeth Burton
@@ -9,7 +9,7 @@
  
  Description:  Read in Census 2010-2020 block crosswalk.
  
- District of Columbia
+ Maryland
  
  Source for crosswalk:
  https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html
