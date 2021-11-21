@@ -10,6 +10,10 @@
  
  Description:  Fetch 2010 census response rate data with Census API.
  Code requires SAS version 9.4M4 or later. 
+ 
+ Note: Tract data appears to use 2020 tracts, even though a few tracts
+ in MD and VA are not in the current list of 2020 tracts. But using
+ 2010 tracts produces many more validation errors. 
 
  Modifications:
 **************************************************************************/
@@ -30,7 +34,7 @@
 
   %** Initialize macro vars **;
 
-  %local stfips var_list api_url for in out geodlbl geosuf dslabel;
+  %local stfips var_list api_url for in out geodlbl geosuf geoafmt geolbl geovfmt dslabel;
   
   %let geo = %upcase( &geo );
   %let st = %upcase( &st );
@@ -39,8 +43,11 @@
   
   %let geosuf = %sysfunc( putc( &geo, $geosuf. ) );
   %let geodlbl = %sysfunc( putc( &geo, $geodlbl. ) );
+  %let geolbl = %sysfunc( putc( &geo, $geolbl. ) );
+  %let geoafmt = %sysfunc( putc( &geo, $geoafmt. ) );
+  %let geovfmt = %sysfunc( putc( &geo, $geovfmt. ) );
   
-  %if &geo = GEO2010 %then %do;
+  %if &geo = GEO2010 or &geo = GEO2020 %then %do;
     %let stfips = %sysfunc( stfips( &st ) ); 
     %let in = state:&stfips;
     %let for = tract:*;
@@ -74,18 +81,22 @@
     
     length Ucounty $ 5;
     Ucounty = trim( state ) || trim( county );
-        
-    %if &geo = GEO2010 %then %do;
-      
-      length Geo2010 $ 11;
-      Geo2010 = trim( state ) || trim( county ) || trim( tract );
+    
+    %if &geo = GEO2010 or &geo = GEO2020 %then %do;
+         
+      length &geo $ 11;
+      &geo = trim( state ) || trim( county ) || trim( tract );
     
       label 
-        Geo2010 = "Full census tract ID (2010): ssccctttttt"
+        &geo = "&geolbl"
         tract = "Census tract code";
         
-      format Geo2010 $geo20a.;
+      format &geo &geoafmt;
 
+      if put( &geo, &geovfmt ) = "" then do;
+        %warn_put( macro=Create_response_rate_ds, msg="Invalid geography. " _n_= &geo= );
+      end;
+          
     %end;
     %else %if &geo = COUNTY %then %do;
     
@@ -140,10 +151,11 @@
 
 /** End Macro Definition **/
 
+
 %Create_response_rate_ds( geo=county )
 
-%Create_response_rate_ds( st=DC, geo=geo2010 )
-%Create_response_rate_ds( st=MD, geo=geo2010 )
-%Create_response_rate_ds( st=VA, geo=geo2010 )
-%Create_response_rate_ds( st=WV, geo=geo2010 )
+%Create_response_rate_ds( st=DC, geo=geo2020 )
+%Create_response_rate_ds( st=MD, geo=geo2020 )
+%Create_response_rate_ds( st=VA, geo=geo2020 )
+%Create_response_rate_ds( st=WV, geo=geo2020 )
 
