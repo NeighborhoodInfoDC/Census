@@ -157,7 +157,7 @@ run;
 
 %Finalize_data_set( 
   data=allyears,
-  out=Cen_building_permits_cnty_2000_2020,
+  out=Cen_bldg_permits_cnty_2000_2020,
   outlib=Census,
   label="Building permit statistics for all Counties reported, 2000-2020",
   sortby=year ucounty,
