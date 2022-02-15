@@ -9,7 +9,11 @@
  
  Description:  Read county building permit statistics on new privately-owned residential construction from 
  https://www2.census.gov/econ/bps/County  files with COYYYYa.txt
-Adapted from Read_2000_2017_buildingpermits.sas
+ Adapted from Read_2000_2017_buildingpermits.sas
+
+ NOTE: the number of counties in each year of data is inconsistent and lower than the 3,143 counties in the
+ U.S. The documentation is not clear why this happens so double check any geography of interest to make
+ sure it appears in all years of data. -RP
 
  Modifications: 
 **************************************************************************/
@@ -23,8 +27,7 @@ Adapted from Read_2000_2017_buildingpermits.sas
 %let revisions = New file;
 
 /* Path to raw data csv files and names */
-
-%let filepath = \\sas1\DCdata\Libraries\Census\Raw\Permits\;
+%let filepath = &_dcdata_r_path.\Census\Raw\Permits\;
 
 %macro ReadIN;
 
@@ -152,8 +155,6 @@ where year > 0; *one obs with missing data (all vars);
 
 run;
 
-%File_info( data=allyears, stats=, freqvars=year  );
-
 %Finalize_data_set( 
   data=allyears,
   out=Cen_building_permits_cnty_2000_2020,
@@ -161,6 +162,7 @@ run;
   label="Building permit statistics for all Counties reported, 2000-2020",
   sortby=year ucounty,
   restrictions=None,
+  freqvars=year,
   revisions=&revisions.
   );
 
